@@ -1,0 +1,36 @@
+.admin-panel {
+    width: 250px;
+    height: 100vh;
+    background-color: grey;
+    color: white;
+    padding: 20px;
+    position: fixed;
+  }
+  
+  .admin-panel h2 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  
+  .admin-panel img {
+    display: block;
+    margin: 0 auto 20px;
+    height: 40px;
+  }
+  
+  .admin-panel ul {
+    list-style: none;
+  }
+  
+  .admin-panel ul li {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+  }
+  
+  .admin-panel ul li:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }

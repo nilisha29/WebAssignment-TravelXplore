@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  .signin-body {
+    margin: 50px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #f8f9fa; */
+  }
+  
+  .signin-container {
+    display: flex;
+    width: 800px;
+    height: 500px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Right Section (Now on the Left) */
+  .right {
+    width: 50%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  /* .right img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  } */
+  .right img {
+    width: 80%;
+    max-width: 300px; /* Prevents it from being too large */
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 10px; /* Space below image */
+}
+  
+  /* Left Section (Now on the Right) */
+  .left {
+    width: 50%;
+    background-color: grey;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .left h2 {
+    color: white;
+    margin-bottom: 20px;
+  }
+  
+  .input-box {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .input-box input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  /* .btn {
+    width: 100%;
+    padding: 10px;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  } */
+  /* .btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #1a75ff;  
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, color 0.3s;
+} */
+
+.btn {
+  /* width: 100%; */
+  padding: 10px 20px;
+  /* padding: auto; */
+  background-color: white;
+  color: #0d6efd;  /* Ensure text is blue */
+  font-size: 16px;
+  font-weight: bold;
+  border: 2px solid #0d6efd; /* Optional: Add a blue border */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  width: auto; /* Make the width only as wide as the text */
+    display: inline-block; /* Prevent full width */
+}
+
+  
+  .btn:hover {
+    /* background-color: #e0e0e0; */
+    background-color: #0d6efd; /* Change background to blue */
+    color: white; /* Make text white */
+  }
+  
+  .signup-text {
+    color: white;
+    margin-top: 10px;
+  }
+  
+  .signup-link {
+    color: white;
+    text-decoration: underline;
+  }
+  
