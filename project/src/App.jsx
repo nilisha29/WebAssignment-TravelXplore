@@ -38,7 +38,11 @@ import ProfileChange from './components/private/ProfileChange';
 import Profile from './components/private/Profile';
 import PrivateRoute from './components/private/PrivateRoutes.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
-import Destination from "./components/private/flightdestination";
+// import Destination from "./components/private/flightdestination";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import AllDestinations from './components/private/AllDestinations';
+import DestinationDetails from './components/private/DestinationDetails';
 
 // const Contact = React.lazy(() => import("./pages/Contact"));
 
@@ -49,6 +53,7 @@ function App() {
       <Suspense fallback={<div>Loading...</div>}>
       {/* <Navbar></Navbar> */}
       <ScrollToTop />
+      <ToastContainer />
         <Routes>
           
           {/* <Route path="/" element={<Home />} />
@@ -95,8 +100,8 @@ function App() {
 
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/destinations" element={<Destination />} />
-
+          <Route path="/destinations" element={<AllDestinations />} />
+          <Route path="/destination/:slug" element={<DestinationDetails />} />
           
         </Routes>
         {/* <Footer></Footer> */}

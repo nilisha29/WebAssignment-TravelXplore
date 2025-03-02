@@ -9,7 +9,7 @@ const ViewBooking = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/booking');
+        const response = await fetch('http://localhost:5000/booking');
         
         if (!response.ok) { // Check if response status is OK
           throw new Error(`HTTP error! status: ${response.status}`);

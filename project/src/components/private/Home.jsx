@@ -46,11 +46,11 @@ const Home = () => {
           </div>
         </section>
 
-        <section className="flight-booking">
+        <section className="bookflight-booking">
           <h2>Book Your Flight</h2>
-          <form className="booking-form">
-            <div className="container">
-              <div className="form-group">
+          <form className="bookbooking-form">
+            <div className="bookcontainer">
+              <div className="bookform-group">
                 <label htmlFor="from">From:</label>
                 <select id="from" name="from" value={formData.from} onChange={handleChange}>
                   <option value="">City or Airport</option>
@@ -68,7 +68,7 @@ const Home = () => {
                   <option value="Nepalgunj">Nepalgunj</option>
                 </select>
               </div>
-              <div className="form-group">
+              <div className="bookform-group">
                 <label htmlFor="to">To:</label>
                 <select id="to" name="to" value={formData.to} onChange={handleChange}>
                   <option value="">City or Airport</option>
@@ -86,15 +86,15 @@ const Home = () => {
                   <option value="Nepalgunj">Nepalgunj</option>
                 </select>
               </div>
-              <div className="form-group">
+              <div className="bookform-group">
                 <label htmlFor="departure">Departure:</label>
                 <input type="date" id="departure" name="departure" value={formData.departure} onChange={handleChange} />
               </div>
-              <div className="form-group">
+              <div className="bookform-group">
                 <label htmlFor="return">Return:</label>
                 <input type="date" id="return" name="return" value={formData.return} onChange={handleChange} />
               </div>
-              <div className="form-group">
+              <div className="bookform-group">
                 <label htmlFor="passengers">Passengers:</label>
                 <select id="passengers" name="passengers" value={formData.passengers} onChange={handleChange}>
                   <option value="1">1</option>

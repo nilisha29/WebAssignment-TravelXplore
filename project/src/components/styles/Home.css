@@ -118,7 +118,7 @@ body {
 }
 
 /* Flight Booking Section */
-.container {
+.bookcontainer {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -130,19 +130,19 @@ body {
   margin: 0 auto;
 }
 
-.flight-booking {
+.bookflight-booking {
   padding: 20px;
   background-color: #f9f9f9;
   text-align: center;
 }
 
-.flight-booking h2 {
+.bookflight-booking h2 {
   font-size: 28px;
   margin-bottom: 20px;
   color: #003580;
 }
 
-.booking-form {
+.bookbooking-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
@@ -150,7 +150,7 @@ body {
   margin: 0 auto;
 }
 
-.form-group {
+.bookform-group {
   text-align: left;
 }
 

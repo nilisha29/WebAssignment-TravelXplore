@@ -9,7 +9,7 @@ function Footer() {
         navigate('/Home');
     }
     const handleDestination =() => {
-        navigate('/Destination');
+        navigate('/destinations');
     }
     const handleAbout =() => {
         navigate('/About');
@@ -26,7 +26,7 @@ function Footer() {
         {/* Left Section */}
         <div className="footer-section">
           <h3>TravelXplore</h3>
-          <p>Your trusted partner for Nepal adventures since 2024.</p>
+          <p>Your trusted partner for online flight booking since 2025.</p>
         </div>
 
         <div className="footer-section">
@@ -61,7 +61,7 @@ function Footer() {
 
       {/* Copyright Section */}
       <div className="footer-bottom">
-        <p>© 2024 TravelXplore. All rights reserved.</p>
+        <p>© 2025 TravelXplore. All rights reserved.</p>
       </div>
     </footer>
   );

@@ -8,6 +8,7 @@ import contactRoutes from "./route/contactroute.js";
 import authRoutes from "./route/authroute.js";
 import bookingRoutes from "./route/bookingroute.js"; // Import booking routes
 import reviewRoutes from './route/reviewroute.js';
+import destinationRoutes from './route/destinationRoutes.js';
 import { fileURLToPath } from 'url';
 import { sequelize, testConnection } from './database/db.js';
 import { authenticateToken } from './middleware/authMiddleware.js';
@@ -20,7 +21,7 @@ dotenv.config();
 
 // Middleware
 app.use(cors({
-    origin: `http://localhost:5174`,
+    origin: `http://localhost:5173`,
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -51,6 +52,9 @@ app.use('/booking', bookingRoutes); // Use booking routes with the prefix '/book
 
 // Review routes
 app.use('/reviews', reviewRoutes);
+
+// Set up routes for flight destinations
+app.use('/destinations', destinationRoutes);
 
 // Test database connection
 sequelize.authenticate()

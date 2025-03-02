@@ -85,7 +85,7 @@ function Contact() {
         <div className="contact-wrapper">
           <div className="contact-info">
             <h3>Get in Touch</h3>
-            <p><i className="fas fa-map-marker-alt"></i> Thamel, Kathmandu, Nepal</p>
+            <p><i className="fas fa-map-marker-alt"></i> Kathmandu, Nepal</p>
             <p><i className="fas fa-phone-alt"></i> +977 1234567890</p>
             <p><i className="fas fa-envelope"></i> info@travelxplore.com</p>
           </div>

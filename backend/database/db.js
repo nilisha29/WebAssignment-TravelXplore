@@ -19,8 +19,10 @@ export async function testConnection() {
 }
 
 // Sync database
-sequelize.sync({ force: false }).then(() => {
-    console.log('Database & tables created!');
+sequelize.sync({ force: false, alter: true }).then(() => {
+    console.log('Database & tables synced!');
+}).catch(err => {
+    console.error('Error syncing database:', err);
 });
 
 // Export the sequelize instance

@@ -1,446 +1,405 @@
 import React, { useState, useEffect, useRef } from 'react';
 import AdminPanel from './AdminPanel';
 import '../styles/ManageFlightDestination.css';
+import { toast } from 'react-toastify';
 
 const ManageFlightDestination = () => {
-  const [showOptions, setShowOptions] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [formAction, setFormAction] = useState('');
-  const [selectedDestination, setSelectedDestination] = useState('');
-  const [DestinationDetails, setDestinationDetails] = useState({
-    name: '',
-    headdescription: '',
-    description: '',
-    duration: '',
-    price: '',
-    imageUrl: [], 
-    inclusions: [],
-    places: []
-  });
-  const [DestinationImageFile, setDestinationImageFile] = useState([]);
-  const [DestinationOptions, setDestinationOptions] = useState([]);
+    const [showOptions, setShowOptions] = useState(true);
+    const [showForm, setShowForm] = useState(false);
+    const [formAction, setFormAction] = useState('');
+    const [selectedDestination, setSelectedDestination] = useState('');
+    const [destinationDetails, setDestinationDetails] = useState({
+        name: '',
+        shortDescription: '',
+        basePrice: '',
+        detailedDescription: ['', '', ''],
+        flightInformation: {
+            price: '',
+            booking: 'Available for booking online.',
+            baggageAllowance: '15 kg for checked baggage and 5 kg for carry-on.',
+            totalFlights: 'Multiple flights daily.',
+            airlines: ''
+        }
+    });
+    const [imageFiles, setImageFiles] = useState({
+        mainImage: null,
+        detailImage1: null,
+        detailImage2: null
+    });
+    const [destinations, setDestinations] = useState([]);
+    const formRef = useRef(null);
 
-  const formRef = useRef(null);
+    useEffect(() => {
+        fetchDestinations();
+    }, []);
 
-  useEffect(() => {
-  
-    const fetchDestinationOptions = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('No auth token found');
-        alert('You are not authorized to perform this action.');
-        return;
-      }
+    useEffect(() => {
+        if (formAction === 'Update Destination' && selectedDestination) {
+            fetchDestinationDetails(selectedDestination);
+        }
+    }, [formAction, selectedDestination]);
 
-      try {
-        const response = await fetch('http://localhost:5000/destination', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        const result = await response.json();
-    const data = result.data || [];  // Accessing the data field
-    const options = data.map(DestinationDetails => DestinationDetails.name);
-    setDestinationOptions(options);  // Assuming the package name is in the 'name' field
-    console.log(options);
-  } catch (error) {
-    console.error("Error fetching destination options:", error);
-  }
-
-      //   if (!response.ok) {
-      //     console.error('Failed to fetch package options:', response.status, response.statusText);
-      //     alert('Failed to fetch package options');
-      //     return;
-      //   }
-
-      //   const data = await response.json();
-      //   setPackageOptions(data.map(packageDetails => packageDetails.name)); // Assuming the package name is in the 'name' field
-      // } catch (error) {
-      //   console.error('Error fetching package options:', error);
-      // }
+    const fetchDestinations = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/destinations');
+            const data = await response.json();
+            setDestinations(data);
+        } catch (error) {
+            console.error('Error fetching destinations:', error);
+            toast.error('Failed to fetch destinations');
+        }
     };
 
-    fetchDestinationOptions();
-  }, []);
-
-  useEffect(() => {
-    if (formAction === 'Update Destination' && selectedDestination) {
-      // Fetch the package details based on the selected package
-      fetchDestinationDetails(selectedDestination);
-    }
-  }, [formAction, selectedDestination]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (formRef.current && !formRef.current.contains(event.target)) {
-        setShowForm(false);
-        setShowOptions(true);
-      }
-    };
-
-    if (showForm) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showForm]);
-
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    setDestinationDetails((prevDetails) => ({
-      ...prevDetails,
-      [id]: value
-    }));
-    console.log(`Input Change - ${id}: ${value}`);
-  };
-
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    if (DestinationDetails.imageUrl.length + files.length > 6) {
-        alert('You can only upload a maximum of 6 images.');
-        return;
-    }
-    setDestinationImageFile(files); // Store the files for upload
-    setDestinationDetails((prevDetails) => ({
-        ...prevDetails,
-        imageUrl: [...prevDetails.imageUrl, ...files.map(file => `uploads/${DestinationDetails.name.replace(/\s+/g, '-')}/${file.name}`)] // Store file paths directly
-    }));
-    console.log('Image Upload:', files);
-  };
-
-  const handleAddPlace = () => {
-    setDestinationDetails((prevDetails) => ({
-      ...prevDetails,
-      places: [...prevDetails.places, { name: '', description: '' }]
-    }));
-  };
-
-  const handlePlaceChange = (index, field, value) => {
-    const updatedPlaces = DestinationDetails.places.map((place, i) => 
-      i === index ? { ...place, [field]: value } : place
-    );
-    setDestinationDetails((prevDetails) => ({
-      ...prevDetails,
-      places: updatedPlaces
-    }));
-  };
-
-  const handleAddInclusion = () => {
-    setDestinationDetails((prevDetails) => ({
-      ...prevDetails,
-      inclusions: [...prevDetails.inclusions, '']
-    }));
-  };
-
-  const handleInclusionChange = (index, value) => {
-    const updatedInclusions = DEstinationDetails.inclusions.map((inclusion, i) => 
-      i === index ? value : inclusion
-    );
-    setDestinationDetails((prevDetails) => ({
-      ...prevDetails,
-      inclusions: updatedInclusions
-    }));
-  };
-
-  const handleSaveDestination = async () => {
-    if (packageImageFile.length !== 6) {
-        alert('Please upload exactly 6 images.');
-        return;
-    }
-
-    console.log('Saving Destination:', DestinationDetails);
-
-    try {
-        const formData = new FormData();
-        formData.append('name', DestinationDetails.name);
-        formData.append('headdescription', DestinationDetails.headdescription);
-        formData.append('description', DestinationDetails.description);
-        formData.append('duration', DestinationDetails.duration);
-        formData.append('price', DestinationDetails.price);
-        DestinationDetails.inclusions.forEach((inclusion, index) => {
-            formData.append(`inclusions[${index}]`, inclusion);
-        });
-        DestinationDetails.places.forEach((place, index) => {
-            formData.append(`places[${index}][name]`, place.name);
-            formData.append(`places[${index}][description]`, place.description);
-        });
-        DestinationImageFile.forEach((file, index) => {
-            formData.append(`images`, file);
-        });
-
-        const response = formAction === 'Create Destination'
-            ? await createDestination(formData)
-            : await updateDestination(selectedDestination, formData);
+    const fetchDestinationDetails = async (slug) => {
+        try {
+            const response = await fetch(`http://localhost:5000/destinations/${slug}`);
+            if (!response.ok) throw new Error('Destination not found');
             
-        console.log('Response:', response); // Log the response
+            const data = await response.json();
+            setDestinationDetails({
+                name: data.name,
+                shortDescription: data.shortDescription,
+                basePrice: data.basePrice,
+                detailedDescription: data.detailedDescription,
+                flightInformation: data.flightInformation
+            });
+        } catch (error) {
+            console.error('Error fetching destination details:', error);
+            toast.error('Failed to fetch destination details');
+        }
+    };
 
-        alert('Destination saved successfully');
-        setShowForm(false);
-        setShowOptions(true);
-    } catch (error) {
-        console.error('Error saving Destination:', error);
-        alert('An error occurred while saving the destination.');
-    }
-  };
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        setDestinationDetails(prev => ({
+            ...prev,
+            [id]: value
+        }));
+    };
 
-  const fetchDestinationDetails = async (DestinationName) => {
-    try {
-      const response = await fetch(`http://localhost:5000/Destination?name=${DestinationName}`);
-      const data = await response.json();
-      setDestinationDetails(data);
-    } catch (error) {
-      console.error('Error fetching package details:', error);
-    }
-  };
+    const handleFlightInfoChange = (field, value) => {
+        setDestinationDetails(prev => ({
+            ...prev,
+            flightInformation: {
+                ...prev.flightInformation,
+                [field]: value
+            }
+        }));
+    };
 
-  const createDestination = async (formData) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        console.error('No auth token found');
-        alert('You are not authorized to perform this action.');
-        return;
-    }
+    const handleImageUpload = (e, imageType) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImageFiles(prev => ({
+                ...prev,
+                [imageType]: file
+            }));
+        }
+    };
 
-    console.log('Creating package with details:', formData);
+    const handleDescriptionChange = (index, value) => {
+        const updatedDescriptions = [...destinationDetails.detailedDescription];
+        updatedDescriptions[index] = value;
+        setDestinationDetails(prev => ({
+            ...prev,
+            detailedDescription: updatedDescriptions
+        }));
+    };
 
-    const response = await fetch('http://localhost:5000/Destination', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-        body: formData
-    });
+    const handleSaveDestination = async () => {
+        try {
+            const formData = new FormData();
+            
+            // Add basic information
+            formData.append('name', destinationDetails.name);
+            formData.append('shortDescription', destinationDetails.shortDescription);
+            formData.append('basePrice', destinationDetails.basePrice);
+            formData.append('detailedDescription', JSON.stringify(destinationDetails.detailedDescription));
+            formData.append('flightInformation', JSON.stringify(destinationDetails.flightInformation));
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Failed to create package:', response.status, response.statusText, errorText);
-        alert(`Failed to create package: ${response.statusText}`);
-        return;
-    }
+            // Add images
+            if (imageFiles.mainImage) {
+                formData.append('mainImage', imageFiles.mainImage);
+            }
+            if (imageFiles.detailImage1) {
+                formData.append('detailImage1', imageFiles.detailImage1);
+            }
+            if (imageFiles.detailImage2) {
+                formData.append('detailImage2', imageFiles.detailImage2);
+            }
 
-    return response.json();
-  };
+            let response;
+            if (formAction === 'Create Destination') {
+                response = await fetch('http://localhost:5000/destinations', {
+                    method: 'POST',
+                    body: formData
+                });
+            } else {
+                response = await fetch(`http://localhost:5000/destinations/${selectedDestination}`, {
+                    method: 'PUT',
+                    body: formData
+                });
+            }
 
-  const updateDestination = async (destinationId, formData) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('No auth token found');
-      alert('You are not authorized to perform this action.');
-      return;
-    }
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message);
+            }
 
-    const response = await fetch(`http://localhost:5000/packages/${destinationId}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      body: formData
-    });
+            const result = await response.json();
+            toast.success(result.message);
+            setShowForm(false);
+            setShowOptions(true);
+            fetchDestinations();
+        } catch (error) {
+            console.error('Error saving destination:', error);
+            toast.error(error.message || 'Error saving destination');
+        }
+    };
 
-    if (!response.ok) {
-      console.error('Failed to update package:', response.status, response.statusText);
-      alert('Failed to update package');
-      return;
-    }
+    const handleDeleteDestination = async () => {
+        if (!window.confirm('Are you sure you want to delete this destination?')) {
+            return;
+        }
 
-    return response.json();
-  };
+        try {
+            const response = await fetch(`http://localhost:5000/destinations/${selectedDestination}`, {
+                method: 'DELETE'
+            });
 
-  const deleteDestination = async (destinationId) => {
-    const token = localStorage.getItem('token'); // Retrieve token from localStorage
-    if (!token) {
-      console.error('No auth token found');
-      alert('You are not authorized to perform this action.');
-      return;
-    }
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message);
+            }
 
-    const response = await fetch(`http://localhost:5000/packages/${destinationId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
+            toast.success('Destination deleted successfully');
+            setShowForm(false);
+            setShowOptions(true);
+            fetchDestinations();
+        } catch (error) {
+            console.error('Error deleting destination:', error);
+            toast.error(error.message || 'Error deleting destination');
+        }
+    };
 
-    if (!response.ok) {
-      console.error('Failed to delete package:', response.status, response.statusText);
-      alert('Failed to delete package');
-      return;
-    }
+    return (
+        <div className="manage-flight-destination-container">
+            <AdminPanel />
+            <div className="manage-flight-destination-main-content">
+                <h1>Manage Flight Destinations</h1>
 
-    return response.json();
-  };
+                {showOptions && (
+                    <div className="options-container">
+                        <div className="option-card">
+                            <button onClick={() => {
+                                setShowOptions(false);
+                                setShowForm(true);
+                                setFormAction('Create Destination');
+                                setDestinationDetails({
+                                    name: '',
+                                    shortDescription: '',
+                                    basePrice: '',
+                                    detailedDescription: ['', '', ''],
+                                    flightInformation: {
+                                        price: '',
+                                        booking: 'Available for booking online.',
+                                        baggageAllowance: '15 kg for checked baggage and 5 kg for carry-on.',
+                                        totalFlights: 'Multiple flights daily.',
+                                        airlines: ''
+                                    }
+                                });
+                                setImageFiles({
+                                    mainImage: null,
+                                    detailImage1: null,
+                                    detailImage2: null
+                                });
+                            }}>
+                                Create New Destination
+                            </button>
+                        </div>
+                        <div className="option-card">
+                            <button onClick={() => {
+                                setShowOptions(false);
+                                setShowForm(true);
+                                setFormAction('Update Destination');
+                            }}>
+                                Update Existing Destination
+                            </button>
+                        </div>
+                        <div className="option-card">
+                            <button onClick={() => {
+                                setShowOptions(false);
+                                setShowForm(true);
+                                setFormAction('Delete Destination');
+                            }}>
+                                Delete Existing Destination
+                            </button>
+                        </div>
+                    </div>
+                )}
 
-  return (
+                {showForm && (
+                    <div className="managedestination-form-container" ref={formRef}>
+                        {(formAction === 'Update Destination' || formAction === 'Delete Destination') && (
+                            <select
+                                value={selectedDestination}
+                                onChange={(e) => setSelectedDestination(e.target.value)}
+                                className="destination-select"
+                            >
+                                <option value="">Select a Destination</option>
+                                {destinations.map((dest) => (
+                                    <option key={dest.urlSlug} value={dest.urlSlug}>
+                                        {dest.name}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
 
-    <div className="manage-flight-destination-container">
-      <AdminPanel />
-      <div className="manage-flight-destination-main-content">
-        <h1>Admin Dashboard</h1>
+                        {formAction === 'Delete Destination' ? (
+                            <div className="delete-confirmation">
+                                <p>Are you sure you want to delete this destination?</p>
+                                <div className="delete-buttons">
+                                    <button onClick={handleDeleteDestination} className="delete-btn">Yes, Delete</button>
+                                    <button onClick={() => setShowForm(false)} className="cancel-btn">Cancel</button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="managedestination-form">
+                                <div className="form-group">
+                                    <label htmlFor="name">Destination Name</label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        value={destinationDetails.name}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
 
-        <div className="options-container">
-          <div className="option-card">
-            <button
-              onClick={() => {
-                setShowOptions(false);
-                setShowForm(true);
-                setFormAction('Create Destination');
-                setDestinationDetails({ name: '', headdescription: '', description: '', duration: '', price: '', imageUrl: [], inclusions: [], places: [] });
-              }}
-            >
-              Create New Destination
-            </button>
-          </div>
-          <div className="option-card">
-            <button
-              onClick={() => {
-                setShowOptions(false);
-                setShowForm(true);
-                setFormAction('Update Destination');
-                setDestinationDetails({ name: '', headdescription: '', description: '', duration: '', price: '', imageUrl: [], inclusions: [], places: [] });
-              }}
-            >
-              Update Existing Destination
-            </button>
-          </div>
-          <div className="option-card">
-            <button
-              onClick={() => {
-                setShowOptions(false);
-                setShowForm(true);
-                setFormAction('Delete Destination');
-                setSelectedDestination('');
-              }}
-            >
-              Delete Existing Destination
-            </button>
-          </div>
+                                <div className="manageform-group">
+                                    <label htmlFor="shortDescription">Short Description</label>
+                                    <input
+                                        type="text"
+                                        id="shortDescription"
+                                        value={destinationDetails.shortDescription}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="manageform-group">
+                                    <label htmlFor="basePrice">Base Price</label>
+                                    <input
+                                        type="number"
+                                        id="basePrice"
+                                        value={destinationDetails.basePrice}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="manageform-group">
+                                    <label>Images</label>
+                                    <div className="image-uploads">
+                                        <div>
+                                            <label>Main Image</label>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => handleImageUpload(e, 'mainImage')}
+                                                required={formAction === 'Create Destination'}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label>Detail Image 1</label>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => handleImageUpload(e, 'detailImage1')}
+                                                required={formAction === 'Create Destination'}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label>Detail Image 2</label>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => handleImageUpload(e, 'detailImage2')}
+                                                required={formAction === 'Create Destination'}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="manageform-group">
+                                    <label>Detailed Description</label>
+                                    {destinationDetails.detailedDescription.map((desc, index) => (
+                                        <textarea
+                                            key={index}
+                                            value={desc}
+                                            placeholder={`Paragraph ${index + 1}`}
+                                            onChange={(e) => handleDescriptionChange(index, e.target.value)}
+                                            required
+                                        />
+                                    ))}
+                                </div>
+
+                                <div className="manageform-group">
+                                    <label>Flight Information</label>
+                                    <div className="flight-info">
+                                        <input
+                                            type="text"
+                                            placeholder="Price"
+                                            value={destinationDetails.flightInformation.price}
+                                            onChange={(e) => handleFlightInfoChange('price', e.target.value)}
+                                            required
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="Booking Status"
+                                            value={destinationDetails.flightInformation.booking}
+                                            onChange={(e) => handleFlightInfoChange('booking', e.target.value)}
+                                            required
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="Baggage Allowance"
+                                            value={destinationDetails.flightInformation.baggageAllowance}
+                                            onChange={(e) => handleFlightInfoChange('baggageAllowance', e.target.value)}
+                                            required
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="Total Flights"
+                                            value={destinationDetails.flightInformation.totalFlights}
+                                            onChange={(e) => handleFlightInfoChange('totalFlights', e.target.value)}
+                                            required
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="Airlines"
+                                            value={destinationDetails.flightInformation.airlines}
+                                            onChange={(e) => handleFlightInfoChange('airlines', e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="manageform-actions">
+                                    <button onClick={handleSaveDestination} className="save-btn">
+                                        {formAction}
+                                    </button>
+                                    <button onClick={() => setShowForm(false)} className="cancel-btn">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
-
-        {showForm && (
-          <div className="flightform-container" ref={formRef}>
-            {formAction === 'Update Destination' && (
-              <select
-                value={selectedDestination}
-                onChange={(e) => setSelectedDestination(e.target.value)}
-              >
-                <option value="">Select a Destination</option>
-                {DestinationOptions.map((DestinationName, index) => (
-                  <option key={index} value={DestinationName}>{DestinationName}</option>
-                ))}
-              </select>
-            )}
-            {formAction === 'Delete Destination' && (
-              <>
-                <select
-                  value={selectedDestination}
-                  onChange={(e) => setSelectedDestination(e.target.value)}
-                >
-                  <option value="">Select a destination</option>
-                  {DestinationOptions.map((DestinationDetails, index) => (
-                    <option key={index} value={DestinationDetails}>{DestinationDetails}</option>
-                  ))}
-                </select>
-                <p>Are you sure you want to delete?</p>
-                <div className="delete-confirmation">
-                  <button onClick={handleDeleteDestination}>Yes</button>
-                  <button onClick={() => setShowForm(false)}>No</button>
-                </div>
-              </>
-            )}
-            {formAction !== 'Delete Destination' && (
-              <>
-                <input
-                  type="text"
-                  id="name"
-                  placeholder="Destination Name"
-                  value={DestinationDetails.name}
-                  onChange={handleInputChange}
-                />
-                <input
-                  type="text"
-                  id="headdescription"
-                  placeholder="Head Description"
-                  value={DestinationDetails.headdescription}
-                  onChange={handleInputChange}
-                />
-                <textarea
-                  id="description"
-                  placeholder="Description"
-                  value={DestinationDetails.description}
-                  onChange={handleInputChange}
-                />
-                <input
-                  type="text"
-                  id="duration"
-                  placeholder="Duration"
-                  value={DestinationDetails.duration}
-                  onChange={handleInputChange}
-                />
-                <input
-                  type="text"
-                  id="price"
-                  placeholder="Price"
-                  value={DestinationDetails.price}
-                  onChange={handleInputChange}
-                />
-                <div className="inclusions-section">
-                  <h3>Inclusions</h3>
-                  {packageDetails.inclusions.map((inclusion, index) => (
-                    <div key={index} className="inclusion-input">
-                      <input
-                        type="text"
-                        placeholder="Inclusion"
-                        value={inclusion}
-                        onChange={(e) => handleInclusionChange(index, e.target.value)}
-                      />
-                    </div>
-                  ))}
-                  <button onClick={handleAddInclusion}>Add Inclusion</button>
-                </div>
-                <input
-                  type="file"
-                  id="images"
-                  multiple
-                  onChange={handleImageUpload}
-                />
-                <div className="image-preview">
-                  {DestinationDetails.imageUrl.map((image, index) => (
-                    <img key={index} src={image} alt={`Preview ${index + 1}`} />
-                  ))}
-                </div>
-                <div className="places-section">
-                  <h3>Places</h3>
-                  {DestinationDetails.places.map((place, index) => (
-                    <div key={index} className="place-inputs">
-                      <input
-                        type="text"
-                        placeholder="Place Name"
-                        value={place.name}
-                        onChange={(e) => handlePlaceChange(index, 'name', e.target.value)}
-                      />
-                      <textarea
-                        placeholder="Place Description"
-                        value={place.description}
-                        onChange={(e) => handlePlaceChange(index, 'description', e.target.value)}
-                      />
-                    </div>
-                  ))}
-                  <button onClick={handleAddPlace}>Add Place</button>
-                </div>
-                <button onClick={handleSaveDestination}>{formAction}</button>
-              </>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-    
-  );
+    );
 };
 
 export default ManageFlightDestination;
