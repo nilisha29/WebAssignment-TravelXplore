@@ -10,8 +10,11 @@ const Navbar = () => {
   const { isAuthenticated, logout } = useContext(AuthContext);
   const dropdownRef = useRef(null);
 
+  console.log('isAuthenticated:', isAuthenticated);
+
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
+    console.log('dropdownOpen:', !dropdownOpen);
   };
 
   const handleClickOutside = (event) => {

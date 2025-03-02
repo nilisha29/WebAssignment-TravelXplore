@@ -7,7 +7,7 @@
     padding: 20px;
     width: calc(100% - 250px);
     min-height: 100vh;
-    background: #f4f4f4;
+    background: lightblue;
   }
   
   header {
@@ -30,7 +30,7 @@
   }
   
   .manage-reviews-table thead {
-    background: #004080;
+    background: blue;
     color: white;
   }
   
@@ -40,7 +40,7 @@
   }
   
   .manage-reviews-table tbody tr:nth-child(even) {
-    background: #f4f4f4;
+    background: white;
   }
   
   .manage-reviews-table tbody tr:hover {

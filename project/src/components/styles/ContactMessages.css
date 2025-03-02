@@ -7,7 +7,7 @@
     padding: 20px;
     width: calc(100% - 250px);
     min-height: 100vh;
-    background: #f4f4f4;
+    background: lightblue;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,7 +16,7 @@
   }
   
   .contact-messages-body {
-    background: white;
+    background: grey;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -34,7 +34,7 @@
   }
   
   .message {
-    background: #f9f9f9;
+    background: lightblue;
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 5px;

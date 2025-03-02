@@ -7,7 +7,7 @@
     padding: 20px;
     width: calc(100% - 250px);
     min-height: 100vh;
-    background: #f4f4f4;
+    background: lightblue;
   }
   
   .options-container {
@@ -17,7 +17,7 @@
   }
   
   .option-card {
-    background: white;
+    background: grey;
     width: 30%;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -28,7 +28,7 @@
   .option-card button {
     padding: 10px 20px;
     border: none;
-    background: #004080;
+    background: lightblue;
     color: white;
     cursor: pointer;
     border-radius: 5px;
@@ -37,10 +37,10 @@
   }
   
   .option-card button:hover {
-    background: #002c5f;
+    background: blue;
   }
   
-  .form-container {
+  .flightform-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,23 +52,94 @@
     margin: auto;
   }
   
-  .form-container input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .form-container button {
-    padding: 10px 15px;
-    border: none;
-    background: #004080;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .form-container button:hover {
-    background: #002c5f;
-  }
+  .flightform-container input,
+.form-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.flightform-container button {
+  padding: 10px 15px;
+  border: none;
+  background: #004080;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.flightform-container button:hover {
+  background: #002c5f;
+}
+
+.image-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.image-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* Styles for the places section */
+.places-section {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.places-section h3 {
+  margin-bottom: 10px;
+  color: #004080;
+}
+
+.place-inputs {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.place-inputs input,
+.place-inputs textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.place-inputs textarea {
+  resize: vertical;
+}
+
+.places-section button {
+  padding: 10px 15px;
+  border: none;
+  background: #004080;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.places-section button:hover {
+  background: #002c5f;
+}
+
+/* Styles for the delete confirmation buttons */
+.delete-confirmation {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.delete-confirmation button {
+  width: 48%;
+}

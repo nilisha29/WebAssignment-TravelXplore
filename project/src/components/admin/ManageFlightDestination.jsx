@@ -173,7 +173,7 @@ const ManageFlightDestination = () => {
             formData.append(`images`, file);
         });
 
-        const response = formAction === 'Create Package'
+        const response = formAction === 'Create Destination'
             ? await createDestination(formData)
             : await updateDestination(selectedDestination, formData);
             
@@ -188,7 +188,7 @@ const ManageFlightDestination = () => {
     }
   };
 
-  const fetchDestinationDetails = async (packageName) => {
+  const fetchDestinationDetails = async (DestinationName) => {
     try {
       const response = await fetch(`http://localhost:5000/Destination?name=${DestinationName}`);
       const data = await response.json();
@@ -226,7 +226,7 @@ const ManageFlightDestination = () => {
     return response.json();
   };
 
-  const updateDestination = async (packageId, formData) => {
+  const updateDestination = async (destinationId, formData) => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No auth token found');
@@ -234,7 +234,7 @@ const ManageFlightDestination = () => {
       return;
     }
 
-    const response = await fetch(`http://localhost:5000/packages/${packageId}`, {
+    const response = await fetch(`http://localhost:5000/packages/${destinationId}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -251,7 +251,7 @@ const ManageFlightDestination = () => {
     return response.json();
   };
 
-  const deleteDestination = async (packageId) => {
+  const deleteDestination = async (destinationId) => {
     const token = localStorage.getItem('token'); // Retrieve token from localStorage
     if (!token) {
       console.error('No auth token found');
@@ -259,7 +259,7 @@ const ManageFlightDestination = () => {
       return;
     }
 
-    const response = await fetch(`http://localhost:5000/packages/${packageId}`, {
+    const response = await fetch(`http://localhost:5000/packages/${destinationId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -279,7 +279,7 @@ const ManageFlightDestination = () => {
 
     <div className="manage-flight-destination-container">
       <AdminPanel />
-      <div className="manage-destination-main-content">
+      <div className="manage-flight-destination-main-content">
         <h1>Admin Dashboard</h1>
 
         <div className="options-container">
@@ -292,7 +292,7 @@ const ManageFlightDestination = () => {
                 setDestinationDetails({ name: '', headdescription: '', description: '', duration: '', price: '', imageUrl: [], inclusions: [], places: [] });
               }}
             >
-              Create New Package
+              Create New Destination
             </button>
           </div>
           <div className="option-card">
@@ -304,7 +304,7 @@ const ManageFlightDestination = () => {
                 setDestinationDetails({ name: '', headdescription: '', description: '', duration: '', price: '', imageUrl: [], inclusions: [], places: [] });
               }}
             >
-              Update Existing Package
+              Update Existing Destination
             </button>
           </div>
           <div className="option-card">
@@ -316,13 +316,13 @@ const ManageFlightDestination = () => {
                 setSelectedDestination('');
               }}
             >
-              Delete Existing Package
+              Delete Existing Destination
             </button>
           </div>
         </div>
 
         {showForm && (
-          <div className="form-container" ref={formRef}>
+          <div className="flightform-container" ref={formRef}>
             {formAction === 'Update Destination' && (
               <select
                 value={selectedDestination}
@@ -340,7 +340,7 @@ const ManageFlightDestination = () => {
                   value={selectedDestination}
                   onChange={(e) => setSelectedDestination(e.target.value)}
                 >
-                  <option value="">Select a package</option>
+                  <option value="">Select a destination</option>
                   {DestinationOptions.map((DestinationDetails, index) => (
                     <option key={index} value={DestinationDetails}>{DestinationDetails}</option>
                   ))}
@@ -415,7 +415,7 @@ const ManageFlightDestination = () => {
                 </div>
                 <div className="places-section">
                   <h3>Places</h3>
-                  {packageDetails.places.map((place, index) => (
+                  {DestinationDetails.places.map((place, index) => (
                     <div key={index} className="place-inputs">
                       <input
                         type="text"

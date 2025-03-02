@@ -1,23 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminPanel from './AdminPanel';
 import "../styles/ViewBooking.css";
 
 const ViewBooking = () => {
   const [bookingData, setBookingData] = useState([]);
+  const [error, setError] = useState(null); // State to hold error messages
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/bookings'); 
+        const response = await fetch('http://localhost:5000/api/booking');
+        
+        if (!response.ok) { // Check if response status is OK
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
+        console.log('Fetched bookings:', data);
         setBookingData(data);
       } catch (error) {
+        setError(error.message); // Set error message on failure
         console.error('Error fetching bookings:', error);
       }
     };
 
     fetchBookings();
-  }, []);
+  }, []); // Empty dependency array ensures the effect runs only once after initial render
 
   return (
     <div className="view-booking-container">
@@ -28,6 +36,8 @@ const ViewBooking = () => {
         </header>
 
         <section id="view-booking">
+          {error && <p className="error-message">Error: {error}</p>} {/* Display error if it exists */}
+          
           {bookingData.length > 0 ? (
             <div className="table-wrapper">
               <table className="booking-details">
@@ -78,7 +88,7 @@ const ViewBooking = () => {
               </table>
             </div>
           ) : (
-            <p>No booking details available.</p>
+            <p>No booking details available.</p> // Message if no bookings are found
           )}
         </section>
       </div>

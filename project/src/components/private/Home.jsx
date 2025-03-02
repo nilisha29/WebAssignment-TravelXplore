@@ -19,7 +19,7 @@ const Home = () => {
   });
 
   const handleBook = () => {
-    navigate("/Destination");
+    navigate("/destinations");
   };
 
   const handleSearchFlights = () => {
@@ -41,7 +41,7 @@ const Home = () => {
         <section id="home" className="banner">
           <img src={Banner} alt="Travel Banner" className="banner-image" />
           <div className="banner-content">
-            <h1>Explore the World with TravelXplore</h1>
+            <h1>Explore the Country with TravelXplore</h1>
             <p>Your gateway to unforgettable journeys.</p>
           </div>
         </section>
